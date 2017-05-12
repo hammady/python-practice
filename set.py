@@ -1,8 +1,11 @@
 #!/usr/bin/env python
+''' Set class implementation with its tests'''
 
 import unittest
 
 class Set(object):
+    '''A pedagogical implementation of the set collection using dict'''
+
     def __init__(self, value_or_list=None):
         self.__dict = {}
         if value_or_list is not None:
@@ -18,15 +21,22 @@ class Set(object):
         return iter(self.__dict)
 
     def add(self, value_or_list):
+        '''Adds a value or a list of values to the set
+           If a value to be added is a duplicate, it will not be added'''
         self.__apply_value_or_list(value_or_list, self.__add_value)
 
     def remove(self, value_or_list):
+        '''Removes a value or a list of values from the set
+           If a non-existent value is requested to be removed, nothing will happen'''
         self.__apply_value_or_list(value_or_list, self.__remove_value)
 
     def contains(self, value):
+        '''Checks whether a value exists in the set
+           Returns True (exists) or False (does not exist)'''
         return self.__dict.has_key(value)
 
-    def __apply_value_or_list(self, value_or_list, proc):
+    @staticmethod
+    def __apply_value_or_list(value_or_list, proc):
         if isinstance(value_or_list, list):
             for value in value_or_list:
                 proc(value)
@@ -42,52 +52,71 @@ class Set(object):
 
 
 class SetTest(unittest.TestCase):
-    def test_init_empty(self):
-        s = Set()
-        assert str(s) == 'Set([])'
-        assert len(s) == 0
-        s2 = Set()
-        assert str(s2) == 'Set([])'
-        assert len(s2) == 0
+    '''Unit tests for the class Set'''
 
-    def test_init_values(self):
-        s = Set([1, 2])
-        assert str(s) == 'Set([1, 2])'
-        assert len(s) == 2
-        s2 = Set(3)
-        assert str(s2) == 'Set([3])'
-        assert len(s2) == 1
+    @staticmethod
+    def test_init_empty():
+        '''tests init with no values'''
+        set1 = Set()
+        assert str(set1) == 'Set([])'
+        assert not set1     # empty (based on len)
+        set2 = Set()
+        assert str(set2) == 'Set([])'
+        assert not set2     # empty (based on len)
 
-    def test_add(self):
-        s = Set()
-        s.add(1)
-        assert str(s) == 'Set([1])'
-        assert len(s) == 1
+    @staticmethod
+    def test_init_values():
+        '''tests init with specified values'''
+        set1 = Set([1, 2])
+        assert str(set1) == 'Set([1, 2])'
+        assert len(set1) == 2
+        set2 = Set(3)
+        assert str(set2) == 'Set([3])'
+        assert len(set2) == 1
 
-    def test_remove(self):
-        s = Set()
-        s.add(1)
-        s.remove(1)
-        assert str(s) == 'Set([])'
-        assert len(s) == 0
-        s.remove(2)
-        s.add([3, 4, 5])
-        s.remove([3, 4])
-        assert str(s) == 'Set([5])'
-        assert len(s) == 1
+    @staticmethod
+    def test_add():
+        '''tests add with value or list of values'''
+        set1 = Set()
+        set1.add(1)
+        assert str(set1) == 'Set([1])'
+        assert len(set1) == 1
+        set1.add([2, 3])
+        assert str(set1) == 'Set([1, 2, 3])'
+        assert len(set1) == 3
 
-    def test_contains(self):
-        s = Set([1, 2])
-        assert s.contains(1)
-        assert not s.contains(3)
+    @staticmethod
+    def test_remove():
+        '''tests remove with value or list of values'''
+        set1 = Set()
+        set1.add(1)
+        set1.remove(1)
+        assert str(set1) == 'Set([])'
+        assert not set1     # empty (based on len)
+        set1.remove(2)
+        set1.add([3, 4, 5])
+        set1.remove([3, 4])
+        assert str(set1) == 'Set([5])'
+        assert len(set1) == 1
 
-    def test_len(self):
-        s = Set([1, 2])
-        assert len(s) == 2
+    @staticmethod
+    def test_contains():
+        '''tests contains'''
+        set1 = Set([1, 2])
+        assert set1.contains(1)
+        assert not set1.contains(3)
 
-    def test_iter(self):
-        s = Set([1, 2, 3])
-        values = [x for x in s]
+    @staticmethod
+    def test_len():
+        '''tests len'''
+        set1 = Set([1, 2])
+        assert len(set1) == 2
+
+    @staticmethod
+    def test_iter():
+        '''tests iterator using for loop'''
+        set1 = Set([1, 2, 3])
+        values = [x for x in set1]
         assert values == [1, 2, 3]
 
 
